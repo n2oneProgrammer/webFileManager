@@ -31,7 +31,7 @@ export const File = ({name}) => {
 
     const contextOptions = [
         ["rename", rename],
-        ["download", null],
+        ["download", () => Api.download(pathBrowserify.join(path, name))],
         ["delete", null]
     ];
 

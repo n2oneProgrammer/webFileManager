@@ -16,7 +16,7 @@ def get_path(rel):
     path = os.path.join(main_dir, rel)
     if not is_subdir(path, main_dir):
         return None
-    return path
+    return os.path.realpath(path)
 
 
 def list_directory(src):
@@ -55,9 +55,7 @@ def upload(file_bytes: bytes, path: str):
     if path is None:
         return False
     parent_dir = os.path.dirname(path)
-    print(parent_dir)
     os.makedirs(parent_dir, exist_ok=True)
     with open(path, "wb") as file:
         file.write(file_bytes)
-    print(len(file_bytes), path)
     return True

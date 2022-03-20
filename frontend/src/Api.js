@@ -1,3 +1,5 @@
+import * as pathBrowserify from 'path-browserify';
+
 export class Api {
     static async getFiles(src) {
         let url = "";
@@ -34,6 +36,19 @@ export class Api {
             method: "POST"
         });
         let json = await data.json();
+    }
+
+    static async download(path) {
+        let url = "";
+        if (process.env.NODE_ENV === "development") {
+            url = "http://localhost:8000";
+        }
+        let response = await fetch(`${url}/download?path=${path}`);
+        let blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = pathBrowserify.basename(path);
+        link.click();
     }
 
 }

@@ -1,4 +1,7 @@
+import os
+
 from fastapi import FastAPI, File, Form
+from starlette.responses import FileResponse
 
 import backend.filemanager as filemanager
 
@@ -21,3 +24,12 @@ async def rename(old: str, newname: str):
 async def upload(file: bytes = File(...), path: str = Form(...)):
     res = filemanager.upload(file, path)
     return res
+
+
+@app.get("/download")
+async def upload(path: str):
+    path = filemanager.get_path(path)
+    if path is None:
+        return False
+
+    return FileResponse(path=path, filename=os.path.basename(path), media_type='application/octet-stream')
