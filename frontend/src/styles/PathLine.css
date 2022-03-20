@@ -1,0 +1,12 @@
+.path_line{
+    margin-bottom: 20px;
+}
+.link {
+    color: #5463ff;
+    padding: 3px;
+}
+.link:hover{
+    border-bottom: 1px solid;
+    background: #959ff6;
+    cursor: pointer;
+}
