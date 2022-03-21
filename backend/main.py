@@ -1,4 +1,6 @@
 import os
+import shutil
+import threading
 
 from fastapi import FastAPI, File, Form
 from starlette.responses import FileResponse
@@ -31,7 +33,15 @@ async def download(path: str):
     path = filemanager.get_path(path)
     if path is None:
         return False
-    return FileResponse(path=path, filename=os.path.basename(path), media_type='application/octet-stream')
+    if os.path.isdir(path):
+        shutil.make_archive(os.path.join(os.getcwd(), "download"), "zip", path)
+        response = FileResponse(os.path.join(os.getcwd(), "download.zip"),
+                                filename=os.path.splitext(os.path.basename(path))[0] + ".zip",
+                                media_type='application/octet-stream')
+        threading.Timer(1.0, lambda: os.remove(os.path.join(os.getcwd(), "download.zip"))).start()
+        return response
+    else:
+        return FileResponse(path=path, filename=os.path.basename(path), media_type='application/octet-stream')
 
 
 @app.post("/delete")

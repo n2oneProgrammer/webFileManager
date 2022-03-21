@@ -31,7 +31,7 @@ export const File = ({name}) => {
 
     const contextOptions = [
         ["rename", rename],
-        ["download", () => Api.download(pathBrowserify.join(path, name))],
+        ["download", () => Api.download(pathBrowserify.join(path, name), name)],
         ["delete", () => Api.remove(pathBrowserify.join(path, name))
             .then(async () => setFilesContext(await Api.getFiles(path)))]
     ];

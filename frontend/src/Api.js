@@ -48,7 +48,7 @@ export class Api {
         let json = await data.json();
     }
 
-    static async download(path) {
+    static async download(path,name) {
         let url = "";
         if (process.env.NODE_ENV === "development") {
             url = "http://localhost:8000";
@@ -57,7 +57,7 @@ export class Api {
         let blob = await response.blob();
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = pathBrowserify.basename(path);
+        link.download = name;
         link.click();
     }
 

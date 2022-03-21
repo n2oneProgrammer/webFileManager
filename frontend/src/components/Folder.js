@@ -31,7 +31,7 @@ export const Folder = ({name}) => {
 
     const contextOptions = [
         ["rename", rename],
-        ["download", () => Api.download(pathBrowserify.join(path, name))],
+        ["download", () => Api.download(pathBrowserify.join(path, name), name + ".zip")],
         ["delete", () => Api.remove(pathBrowserify.join(path, name))
             .then(async () => setFilesContext(await Api.getFiles(path)))]
     ];

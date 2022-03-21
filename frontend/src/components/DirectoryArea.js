@@ -10,42 +10,45 @@ import {Api} from "../Api";
 export const DirectoryArea = (props) => {
     let [filesContext, setFilesContext] = useContext(FileManagerContext);
     let [root, setPath] = useContext(PathContext);
-    const traverseFileTree = (item, path) => {
+    const traverseFileTree = async (item, path) => {
         path = path || "";
         if (item.isFile) {
             // Get file
-            item.file((file) => {
-                Api.upload(file, pathBrowserify.join(root, path, file.name)).then(() => console.log("upload"))
-                    .then(async () => setFilesContext(await Api.getFiles(root)));
+            await (new Promise((resolve) => item.file(async (file) => {
+                await Api.upload(file, pathBrowserify.join(root, path, file.name));
                 console.log("File:", path + file.name, file);
-            });
+                resolve()
+            })));
         } else if (item.isDirectory) {
             // Get folder contents
             let dirReader = item.createReader();
-            dirReader.readEntries((entries) => {
+            await (new Promise((resolve) => dirReader.readEntries(async (entries) => {
                 for (let i = 0; i < entries.length; i++) {
-                    traverseFileTree(entries[i], path + item.name + "/");
+                    await traverseFileTree(entries[i], path + item.name + "/");
                 }
-            });
+                resolve();
+            })));
         }
     };
 
-    const onDropFiles = (e) => {
+    const onDropFiles = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         let items = e.dataTransfer.items;
         for (let i = 0; i < items.length; i++) {
             let item = items[i].webkitGetAsEntry();
             if (item) {
-                traverseFileTree(item);
+                await traverseFileTree(item);
+                console.log("UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
+                setFilesContext(await Api.getFiles(root))
             }
         }
-    }
+    };
     const onDragFiles = (e) => {
         e.preventDefault();
         e.stopPropagation();
-    }
-    console.log(filesContext)
+    };
+    console.log(filesContext);
     let dirs = null;
     if (filesContext != null) {
         dirs = Object.entries(filesContext).map(el => {
@@ -53,8 +56,7 @@ export const DirectoryArea = (props) => {
                 return <File key={el[0]} name={el[0]}/>
             }
             return <Folder key={el[0]} name={el[0]}/>
-        })
-        console.log()
+        });
         console.log(dirs)
     }
 
