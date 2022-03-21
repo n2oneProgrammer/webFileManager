@@ -8,16 +8,15 @@ import * as pathBrowserify from 'path-browserify';
 import {Api} from "../Api";
 
 export const DirectoryArea = (props) => {
-    let [filesContext, _] = useContext(FileManagerContext);
+    let [filesContext, setFilesContext] = useContext(FileManagerContext);
     let [root, setPath] = useContext(PathContext);
-
     const traverseFileTree = (item, path) => {
         path = path || "";
         if (item.isFile) {
             // Get file
             item.file((file) => {
-                Api.upload(file, pathBrowserify.join(root, path, file.name)).then(() => console.log("upload"));
-
+                Api.upload(file, pathBrowserify.join(root, path, file.name)).then(() => console.log("upload"))
+                    .then(async () => setFilesContext(await Api.getFiles(root)));
                 console.log("File:", path + file.name, file);
             });
         } else if (item.isDirectory) {
