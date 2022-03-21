@@ -1,4 +1,5 @@
 import os
+import shutil
 
 main_dir = "D:\\projekty\\PycharmProjects\\webFilemanager\\backend\\static"
 
@@ -65,5 +66,8 @@ def delete(path):
     path = get_path(path)
     if path is None:
         return False
-    os.remove(path)
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    else:
+        os.remove(path)
     return True
