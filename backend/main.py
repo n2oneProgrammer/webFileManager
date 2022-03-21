@@ -27,9 +27,14 @@ async def upload(file: bytes = File(...), path: str = Form(...)):
 
 
 @app.get("/download")
-async def upload(path: str):
+async def download(path: str):
     path = filemanager.get_path(path)
     if path is None:
         return False
-
     return FileResponse(path=path, filename=os.path.basename(path), media_type='application/octet-stream')
+
+
+@app.post("/delete")
+async def delete(path: str):
+    res = filemanager.delete(path)
+    return res

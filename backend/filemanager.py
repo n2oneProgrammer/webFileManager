@@ -59,3 +59,11 @@ def upload(file_bytes: bytes, path: str):
     with open(path, "wb") as file:
         file.write(file_bytes)
     return True
+
+
+def delete(path):
+    path = get_path(path)
+    if path is None:
+        return False
+    os.remove(path)
+    return True

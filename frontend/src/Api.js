@@ -22,8 +22,7 @@ export class Api {
         body.append("path", path);
 
         await fetch(`${url}/upload`, {
-            method: "POST",
-            body: body
+            method: "POST", body: body
         });
     }
 
@@ -33,6 +32,17 @@ export class Api {
             url = "http://localhost:8000";
         }
         let data = await fetch(`${url}/rename?old=${old}&newname=${newName}`, {
+            method: "POST"
+        });
+        let json = await data.json();
+    }
+
+    static async remove(path) {
+        let url = "";
+        if (process.env.NODE_ENV === "development") {
+            url = "http://localhost:8000";
+        }
+        let data = await fetch(`${url}/delete?path=${path}`, {
             method: "POST"
         });
         let json = await data.json();
