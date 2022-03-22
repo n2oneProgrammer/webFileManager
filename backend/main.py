@@ -1,6 +1,7 @@
 import os
 import shutil
 import threading
+from fastapi.staticfiles import StaticFiles
 
 from fastapi import FastAPI, File, Form
 from starlette.responses import FileResponse
@@ -48,3 +49,6 @@ async def download(path: str):
 async def delete(path: str):
     res = filemanager.delete(path)
     return res
+
+
+app.mount("/", StaticFiles(directory="static"), name="static")

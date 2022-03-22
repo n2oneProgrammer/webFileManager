@@ -1,7 +1,7 @@
 import os
 import shutil
 
-main_dir = "D:\\projekty\\PycharmProjects\\webFilemanager\\backend\\static"
+main_dir = os.environ.get('FILEMANAGER_PATH')
 
 
 def is_subdir(path, directory):
