@@ -2,21 +2,24 @@ import {Folder} from "./Folder";
 import "../styles/DirectoryArea.css";
 import {File} from "./File";
 import {useContext} from "react";
-import {FileManagerContext, PathContext} from "../Contexts";
+import {FileManagerContext, NotifiesContext, PathContext} from "../Contexts";
 import {PathLine} from "./PathLine";
 import * as pathBrowserify from 'path-browserify';
 import {Api} from "../Api";
 
 export const DirectoryArea = (props) => {
     let [filesContext, setFilesContext] = useContext(FileManagerContext);
+    let [addNotify, removeNotify] = useContext(NotifiesContext);
     let [root, setPath] = useContext(PathContext);
     const traverseFileTree = async (item, path) => {
         path = path || "";
         if (item.isFile) {
             // Get file
             await (new Promise((resolve) => item.file(async (file) => {
+                let id = addNotify(file.name);
                 await Api.upload(file, pathBrowserify.join(root, path, file.name));
                 console.log("File:", path + file.name, file);
+                removeNotify(id);
                 resolve()
             })));
         } else if (item.isDirectory) {

@@ -1,0 +1,13 @@
+.notifyContainer{
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+}
+.notifyContainer div{
+    height: 40px;
+    width: 200px;
+    background: green;
+    margin-top: 10px;
+    border-radius: 10px;
+    text-align: center;
+}

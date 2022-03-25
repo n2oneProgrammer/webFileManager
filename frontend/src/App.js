@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {HeaderComponent} from "./components/HeaderComponent";
 import {DirectoryArea} from "./components/DirectoryArea";
-import {ContextMenu, FileManagerContext, PathContext} from "./Contexts";
+import {ContextMenu, FileManagerContext, NotifiesContext, PathContext} from "./Contexts";
 import {Api} from "./Api";
 import {ContextMenuComponent} from "./components/ContextMenuComponent";
+import {Notifies} from "./components/Notifies";
 
 
 const App = () => {
@@ -13,6 +14,8 @@ const App = () => {
     const [contextMenuXPos, setcontextMenuXPos] = useState(0);
     const [contextMenuYPos, setcontextMenuYPos] = useState(0);
     const [contextMenuOptions, setcontextMenuOptions] = useState([]);
+    const [notifiesTable, setNotifiesTable] = useState([]);
+
     useEffect(async () => {
         let data = await Api.getFiles(path);
         setFiles(data);
@@ -35,20 +38,33 @@ const App = () => {
         show: showContextMenu,
         hide: hideContextMenu
     };
-    return (
 
-        <ContextMenu.Provider value={contextMenuFunctions}>
-            <PathContext.Provider value={[path, setPath]}>
-                <FileManagerContext.Provider value={[files, setFiles]}>
-                    <div className="App" onClick={hideContextMenu}>
-                        <ContextMenuComponent visible={contextMenuShow} x={contextMenuXPos} y={contextMenuYPos}
-                                              options={contextMenuOptions}/>
-                        <HeaderComponent/>
-                        <DirectoryArea/>
-                    </div>
-                </FileManagerContext.Provider>
-            </PathContext.Provider>
-        </ContextMenu.Provider>
+    const addNotify = (text) => {
+        let id = notifiesTable[notifiesTable.length - 1];
+        setNotifiesTable(notifiesTable.concat([{id: id, text: text}]));
+        return id;
+    };
+    let removeNotify = (id) => {
+        setNotifiesTable(notifiesTable.filter(el => el.id !== id));
+    };
+
+
+    return (
+        <NotifiesContext.Provider value={[addNotify, removeNotify]}>
+            <ContextMenu.Provider value={contextMenuFunctions}>
+                <PathContext.Provider value={[path, setPath]}>
+                    <FileManagerContext.Provider value={[files, setFiles]}>
+                        <Notifies notifiesTable={notifiesTable}/>
+                        <div className="App" onClick={hideContextMenu}>
+                            <ContextMenuComponent visible={contextMenuShow} x={contextMenuXPos} y={contextMenuYPos}
+                                                  options={contextMenuOptions}/>
+                            <HeaderComponent/>
+                            <DirectoryArea/>
+                        </div>
+                    </FileManagerContext.Provider>
+                </PathContext.Provider>
+            </ContextMenu.Provider>
+        </NotifiesContext.Provider>
     );
 };
-export default App
+export default App;
