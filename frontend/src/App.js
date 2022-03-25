@@ -16,9 +16,12 @@ const App = () => {
     const [contextMenuOptions, setcontextMenuOptions] = useState([]);
     const [notifiesTable, setNotifiesTable] = useState([]);
 
-    useEffect(async () => {
-        let data = await Api.getFiles(path);
-        setFiles(data);
+    useEffect(() => {
+        let updateFiles = async () => {
+            let data = await Api.getFiles(path);
+            setFiles(data);
+        };
+        updateFiles();
     }, [path]);
 
     const showContextMenu = (e, options) => {

@@ -10,7 +10,7 @@ import {Api} from "../Api";
 export const DirectoryArea = (props) => {
     let [filesContext, setFilesContext] = useContext(FileManagerContext);
     let [addNotify, removeNotify] = useContext(NotifiesContext);
-    let [root, setPath] = useContext(PathContext);
+    let [root] = useContext(PathContext);
     const traverseFileTree = async (item, path) => {
         path = path || "";
         if (item.isFile) {

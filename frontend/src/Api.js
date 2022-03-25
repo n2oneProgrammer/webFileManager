@@ -1,5 +1,3 @@
-import * as pathBrowserify from 'path-browserify';
-
 export class Api {
     static async getFiles(src) {
         let url = "";
@@ -31,10 +29,9 @@ export class Api {
         if (process.env.NODE_ENV === "development") {
             url = "http://localhost:8000";
         }
-        let data = await fetch(`${url}/rename?old=${old}&newname=${newName}`, {
+        await fetch(`${url}/rename?old=${old}&newname=${newName}`, {
             method: "POST"
         });
-        let json = await data.json();
     }
 
     static async remove(path) {
@@ -42,13 +39,12 @@ export class Api {
         if (process.env.NODE_ENV === "development") {
             url = "http://localhost:8000";
         }
-        let data = await fetch(`${url}/delete?path=${path}`, {
+        await fetch(`${url}/delete?path=${path}`, {
             method: "POST"
         });
-        let json = await data.json();
     }
 
-    static async download(path,name) {
+    static async download(path, name) {
         let url = "";
         if (process.env.NODE_ENV === "development") {
             url = "http://localhost:8000";

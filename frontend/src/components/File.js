@@ -5,9 +5,9 @@ import * as pathBrowserify from 'path-browserify';
 import {Api} from "../Api";
 
 export const File = ({name}) => {
-    let [path, setPath] = useContext(PathContext);
+    let [path] = useContext(PathContext);
     const contextMenu = useContext(ContextMenu);
-    let [filesContext, setFilesContext] = useContext(FileManagerContext);
+    let [, setFilesContext] = useContext(FileManagerContext);
     let [editMode, setEditMode] = useState(false);
     let [inputSize, setInputSize] = useState(`${name.length + 1}ch`);
     let [inputText, setInputText] = useState(name);
