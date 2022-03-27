@@ -3,10 +3,10 @@ import shutil
 import threading
 from fastapi.staticfiles import StaticFiles
 
-from fastapi import FastAPI, File, Form
+from fastapi import FastAPI, File, Form, HTTPException
 from starlette.responses import FileResponse
 
-import backend.filemanager as filemanager
+import filemanager as filemanager
 
 app = FastAPI()
 
@@ -49,6 +49,14 @@ async def download(path: str):
 async def delete(path: str):
     res = filemanager.delete(path)
     return res
+
+
+@app.get("/")
+async def server_index():
+    if not os.path.isfile(os.path.join(os.getcwd(), "static/index.html")):
+        raise HTTPException(status_code=404)
+
+    return FileResponse(path=os.path.join(os.getcwd(), "static/index.html"), media_type="text/html")
 
 
 app.mount("/", StaticFiles(directory="static"), name="static")
