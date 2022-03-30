@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {HeaderComponent} from "./components/HeaderComponent";
 import {DirectoryArea} from "./components/DirectoryArea";
 import {ContextMenu, FileManagerContext, NotifiesContext, PathContext} from "./Contexts";
-import {Api} from "./Api";
+import {Api, User} from "./Api";
 import {ContextMenuComponent} from "./components/ContextMenuComponent";
 import {Notifies} from "./components/Notifies";
-
+import {LoginBox} from "./components/LoginBox";
 
 const App = () => {
     const [files, setFiles] = useState(null);
@@ -15,6 +15,7 @@ const App = () => {
     const [contextMenuYPos, setcontextMenuYPos] = useState(0);
     const [contextMenuOptions, setcontextMenuOptions] = useState([]);
     const [notifiesTable, setNotifiesTable] = useState([]);
+    const [isActiveLoginBox, setActiveLoginBox] = useState(false);
 
     useEffect(() => {
         let updateFiles = async () => {
@@ -50,8 +51,14 @@ const App = () => {
     let removeNotify = (id) => {
         setNotifiesTable(notifiesTable.filter(el => el.id !== id));
     };
-
-
+    User.showLoginBox = () => {
+        setActiveLoginBox(true);
+    };
+    User.hideLoginBox = async () => {
+        setActiveLoginBox(false);
+        let data = await Api.getFiles(path);
+        setFiles(data);
+    };
     return (
         <NotifiesContext.Provider value={[addNotify, removeNotify]}>
             <ContextMenu.Provider value={contextMenuFunctions}>
@@ -63,6 +70,10 @@ const App = () => {
                                                   options={contextMenuOptions}/>
                             <HeaderComponent/>
                             <DirectoryArea/>
+                            <LoginBox active={isActiveLoginBox} updateFile={async () => {
+                                let data = await Api.getFiles(path);
+                                setFiles(data);
+                            }}/>
                         </div>
                     </FileManagerContext.Provider>
                 </PathContext.Provider>

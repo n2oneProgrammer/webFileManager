@@ -10,11 +10,23 @@ from fastapi import FastAPI, File, Form, HTTPException, Depends
 from starlette import status
 from starlette.responses import FileResponse
 
+from fastapi.middleware.cors import CORSMiddleware
 import filemanager as filemanager
 from backend.auth import Token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, User, \
     get_current_active_user
 
 app = FastAPI()
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/get")
