@@ -12,7 +12,7 @@ from starlette.responses import FileResponse
 
 from fastapi.middleware.cors import CORSMiddleware
 import filemanager as filemanager
-from backend.auth import Token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, User, \
+from auth import Token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, User, \
     get_current_active_user
 
 app = FastAPI()
